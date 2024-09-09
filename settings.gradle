@@ -1,0 +1,13 @@
+pluginManagement {
+    repositories {
+        maven {
+            url = uri("https://repo.asredanesh.com/repository/maven/")
+            credentials {
+                username = System.getenv("CI_REGISTRY_USERNAME") ?: ""
+                password = System.getenv("CI_REGISTRY_PASSWORD") ?: ""
+            }
+        }
+    }
+}
+
+rootProject.name = 'versioning'
