@@ -24,13 +24,4 @@ public interface UserConfigStorage {
      * @return the saved config
      */
     JsonNode saveUserConfig(String userId, JsonNode config);
-
-    /**
-     * Computes the difference between the current config version and the latest config version for the given user.
-     *
-     * @param userId         the user identifier
-     * @param currentVersion the current version of the config
-     * @return an Optional containing the diff between the current and latest versions
-     */
-    Optional<JsonNode> getLatestConfigDiff(String userId, String currentVersion);
 }

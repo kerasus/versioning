@@ -2,7 +2,6 @@ package com.ada.versioning.storage.impl;
 
 import com.ada.versioning.storage.UserConfigStorage;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jsonpatch.diff.JsonDiff;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.annotation.PostConstruct;
@@ -20,7 +19,7 @@ import java.util.Optional;
 public class FileSystemUserConfigStorage implements UserConfigStorage {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    @Value("${config.path}")
+    @Value("${config.file.path}")
     private String configPath;
 
     // This method will be executed after the bean is initialized
@@ -70,46 +69,6 @@ public class FileSystemUserConfigStorage implements UserConfigStorage {
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Could not save user config", e);
-        }
-    }
-
-    @Override
-    public Optional<JsonNode> getLatestConfigDiff(String userId, String currentVersion) {
-        // Retrieve the current config for the given version
-        Optional<JsonNode> currentConfigOpt = getUserConfig(userId, Optional.of(currentVersion));
-        if (currentConfigOpt.isEmpty()) {
-            return Optional.empty();
-        }
-
-        JsonNode currentConfig = currentConfigOpt.get();
-
-        // Retrieve the latest config
-        Optional<JsonNode> latestConfigOpt = getUserConfig(userId, Optional.empty());  // No version means latest
-        if (latestConfigOpt.isEmpty()) {
-            return Optional.empty();
-        }
-
-        JsonNode latestConfig = latestConfigOpt.get();
-        String latestVersion = latestConfig.get("version").asText();
-
-        // If the versions are the same, return an empty diff
-        if (latestVersion.equals(currentVersion)) {
-            return Optional.of(objectMapper.createObjectNode());
-        }
-
-        // Compute the diff between current and latest config using json-patch
-        JsonNode diff = computeDiff(currentConfig, latestConfig);
-        return Optional.of(diff);
-    }
-
-    private JsonNode computeDiff(JsonNode currentConfig, JsonNode latestConfig) {
-        try {
-            // Compute the diff using JsonPatch
-            JsonNode patch = JsonDiff.asJson(currentConfig, latestConfig);
-            return patch;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to compute JSON diff", e);
         }
     }
 }

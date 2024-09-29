@@ -29,7 +29,15 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// JSON Patch dependency
 	implementation 'com.github.java-json-tools:json-patch:1.13'
+
+	// JGit dependency
+	implementation 'org.eclipse.jgit:org.eclipse.jgit:6.7.0.202309050840-r'
+
+	// Add MinIO client dependency
+	implementation 'io.minio:minio:8.5.7'
 }
 
 tasks.named('test') {
